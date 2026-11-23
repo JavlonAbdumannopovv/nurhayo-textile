@@ -26,6 +26,10 @@
                 padding: 0;
             }
 
+            html {
+                scroll-behavior: smooth;
+            }
+
             body {
                 overscroll-behavior: none;
             }
@@ -42,6 +46,36 @@
         ::-webkit-scrollbar {
             display: none;
         }
+
+        /* Bi-directional Smooth Scroll Reveal Animation */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+
+        .reveal-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Subtle Stagger Utilities */
+        .delay-75 { transition-delay: 75ms; }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-150 { transition-delay: 150ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-250 { transition-delay: 250ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal-up {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
     </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <script
@@ -53,13 +87,15 @@
         class="sticky top-0 w-full z-50 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant/40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
         <div class="h-20 max-w-[1280px] mx-auto px-6 lg:px-12 flex items-center justify-between gap-4">
             <div class="flex items-center gap-4 shrink-0"><a class="flex items-center gap-3" data-path="home"
-                    href="#"><img alt="" class="h-8 w-auto object-contain"
-                        src="/images/photo_2026-11-20_20-04-09.jpg" /><span
+                    href="#"><img alt="NURHAYO TEXTILE Logo"
+                        class="w-10 h-10 rounded-full object-cover shrink-0 border border-outline-variant/40 shadow-sm"
+                        style="border-radius: 50%;"
+                        src="images/photo_2026-11-20_20-04-09.jpg" /><span
                         class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface font-bold hidden sm:inline-block">NURHAYO
                         TEXTILE</span></a></div>
             <nav class="hidden xl:flex items-center gap-6" data-active-classes="text-secondary font-semibold"><a
                     class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
-                    data-path="about" href="#about">O.компании</a><a
+                    data-path="about" href="#about">О компании</a><a
                     class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
                     data-path="advantages" href="#advantages">Преимущества</a><a
                     class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
@@ -69,8 +105,8 @@
                     class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
                     data-path="cooperation" href="#cooperation">Сотрудничество</a><a
                     class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
-                    data-path="contact" href="#contact"></a></nav>
-            <div class="flex items-center gap-4 sm:gap-6 shrink-0"><a
+                    data-path="contact" href="#contact">Контакты</a></nav>
+            <div class="flex items-center gap-3 sm:gap-4 shrink-0"><a
                     class="hidden md:flex items-center gap-2 font-label-md text-label-md text-on-surface hover:text-secondary transition-colors"
                     href="tel:+998906212221"><span
                         class="material-symbols-outlined text-[18px] text-secondary">call</span><span>+998 90
@@ -78,15 +114,100 @@
                     class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-secondary"
                     href="https://t.me/ooo_NURHAYO_textile" rel="noopener noreferrer" target="_blank"><span
                         class="material-symbols-outlined text-[18px]">send</span></a>
-                <div class="hidden lg:flex items-center font-label-sm text-label-sm text-on-surface-variant"><button
-                        class="text-on-surface font-semibold hover:text-secondary transition-colors"
-                        type="button">RU</button><span class="mx-1.5 opacity-40">|</span><button
-                        class="text-on-surface-variant hover:text-secondary transition-colors" type="button">EN</button>
-                </div><a
-                    class="hidden sm:inline-flex items-center justify-center bg-primary-container text-on-primary font-label-md text-label-md uppercase px-5 py-2.5 rounded-lg hover:bg-secondary transition-all shadow-[0_4px_14px_rgba(0,99,152,0.15)]"
+                <a
+                    class="hidden sm:inline-flex items-center justify-center bg-primary-container text-on-primary font-label-md text-label-md uppercase px-4 py-2 rounded-lg hover:bg-secondary transition-all shadow-[0_4px_14px_rgba(0,99,152,0.15)]"
                     href="#contact">Связаться с нами</a>
-
+                <!-- Mobile / Tablet Hamburger Toggle Button -->
+                <button id="mobile-menu-toggle" aria-label="Открыть меню"
+                    class="xl:hidden flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container hover:bg-surface-container-high active:scale-95 transition-all text-on-surface focus:outline-none">
+                    <span id="mobile-menu-icon" class="material-symbols-outlined text-[24px]">menu</span>
+                </button>
             </div>
+        </div>
+    </header>
+
+    <!-- Mobile & Tablet Navigation Drawer Overlay -->
+    <div id="mobile-menu-backdrop"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 transition-opacity duration-300 opacity-0 pointer-events-none"
+        aria-hidden="true"></div>
+
+    <!-- Mobile & Tablet Slide-Over Drawer -->
+    <aside id="mobile-menu-drawer"
+        class="fixed top-0 right-0 w-[300px] sm:w-[360px] max-w-[85vw] h-full bg-surface-container-lowest shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-out transform translate-x-full border-l border-outline-variant/30"
+        aria-label="Мобильное меню">
+        <!-- Drawer Header -->
+        <div class="h-20 px-6 flex items-center justify-between border-b border-outline-variant/20 bg-surface/50">
+            <div class="flex items-center gap-3">
+                <img alt="NURHAYO TEXTILE Logo"
+                    class="w-9 h-9 rounded-full object-cover shrink-0 border border-outline-variant/40"
+                    style="border-radius: 50%;"
+                    src="images/photo_2026-11-20_20-04-09.jpg" />
+                <span class="font-headline-sm text-[16px] uppercase tracking-wider text-on-surface font-bold">
+                    NURHAYO TEXTILE
+                </span>
+            </div>
+            <button id="mobile-menu-close" aria-label="Закрыть меню"
+                class="flex items-center justify-center w-9 h-9 rounded-lg bg-surface-container hover:bg-surface-container-high active:scale-95 transition-all text-on-surface focus:outline-none">
+                <span class="material-symbols-outlined text-[22px]">close</span>
+            </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="flex-1 overflow-y-auto px-6 py-6 space-y-1">
+            <span class="font-label-sm text-[11px] uppercase tracking-widest text-on-surface-variant font-semibold px-3 mb-2 block">
+                Разделы сайта
+            </span>
+            <a class="mobile-nav-link flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface hover:text-secondary hover:bg-surface-container transition-colors font-body-md font-medium"
+                href="#about">
+                <span class="material-symbols-outlined text-[20px] text-secondary">domain</span>
+                <span>О компании</span>
+            </a>
+            <a class="mobile-nav-link flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface hover:text-secondary hover:bg-surface-container transition-colors font-body-md font-medium"
+                href="#advantages">
+                <span class="material-symbols-outlined text-[20px] text-secondary">verified</span>
+                <span>Преимущества</span>
+            </a>
+            <a class="mobile-nav-link flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface hover:text-secondary hover:bg-surface-container transition-colors font-body-md font-medium"
+                href="#products">
+                <span class="material-symbols-outlined text-[20px] text-secondary">apparel</span>
+                <span>Каталог продукции</span>
+            </a>
+            <a class="mobile-nav-link flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface hover:text-secondary hover:bg-surface-container transition-colors font-body-md font-medium"
+                href="#production">
+                <span class="material-symbols-outlined text-[20px] text-secondary">precision_manufacturing</span>
+                <span>Производство</span>
+            </a>
+            <a class="mobile-nav-link flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface hover:text-secondary hover:bg-surface-container transition-colors font-body-md font-medium"
+                href="#cooperation">
+                <span class="material-symbols-outlined text-[20px] text-secondary">handshake</span>
+                <span>Сотрудничество</span>
+            </a>
+            <a class="mobile-nav-link flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface hover:text-secondary hover:bg-surface-container transition-colors font-body-md font-medium"
+                href="#contact">
+                <span class="material-symbols-outlined text-[20px] text-secondary">contact_phone</span>
+                <span>Контакты</span>
+            </a>
+        </div>
+
+        <!-- Drawer Footer: Quick Contacts -->
+        <div class="p-6 border-t border-outline-variant/20 bg-surface/60 space-y-3">
+            <a class="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md uppercase tracking-wider font-semibold hover:bg-secondary transition-all shadow-md mobile-nav-link"
+                href="#contact">
+                <span>Запросить расчет</span>
+                <span class="material-symbols-outlined text-[16px]">send</span>
+            </a>
+            <a class="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-body-sm transition-colors"
+                href="tel:+998906212221">
+                <span class="material-symbols-outlined text-[18px] text-secondary">call</span>
+                <span>+998 90 621-22-21</span>
+            </a>
+            <a class="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-body-sm transition-colors"
+                href="https://t.me/ooo_NURHAYO_textile" target="_blank" rel="noopener noreferrer">
+                <span class="material-symbols-outlined text-[18px] text-secondary">send</span>
+                <span>Telegram-консультант</span>
+            </a>
+        </div>
+    </aside>
         </div>
     </header>
     <main class="w-full pt-20 bg-surface">
@@ -101,7 +222,7 @@
                     style="background-image: radial-gradient(rgba(255,255,255,0.2) 1px, transparent 1px); background-size: 32px 32px;">
                 </div>
                 <div class="max-w-[1280px] mx-auto px-6 lg:px-12 relative z-10">
-                    <div class="max-w-4xl space-y-6">
+                    <div class="max-w-4xl space-y-6 reveal-up">
                         <!-- Verification pill badge -->
                         <div
                             class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-lowest/10 border border-secondary-container/30 backdrop-blur-sm">
@@ -138,7 +259,7 @@
                     </div>
                     <!-- Trust Metrics Bar -->
                     <div
-                        class="mt-16 pt-10 border-t border-surface-container-lowest/10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                        class="mt-16 pt-10 border-t border-surface-container-lowest/10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 reveal-up delay-150">
                         <div class="space-y-1">
                             <div
                                 class="font-headline-lg text-headline-lg text-surface-container-lowest font-bold tracking-tight">
@@ -178,7 +299,7 @@
                     </div>
                     <!-- Hero Visual Industrial Showcase Card -->
                     <div
-                        class="mt-12 rounded-xl overflow-hidden border border-surface-container-lowest/15 shadow-2xl relative">
+                        class="mt-12 rounded-xl overflow-hidden border border-surface-container-lowest/15 shadow-2xl relative reveal-up delay-200">
                         <div class="relative h-80 sm:h-96 md:h-[420px] w-full">
                             <img class="w-full h-full object-cover"
                                 data-alt="A modern industrial textile manufacturing facility interior with automated weaving looms, precision laser fabric cutters, orderly stacks of deep navy and charcoal cotton rolls under bright architectural studio lighting, professional textile engineers observing quality standards with zero dust."
@@ -218,7 +339,7 @@
             <section class="w-full py-20 lg:py-28 bg-surface" id="about">
                 <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
                     <!-- Section Header -->
-                    <div class="max-w-2xl mb-14">
+                    <div class="max-w-2xl mb-14 reveal-up">
                         <div
                             class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold mb-2">
                             О КОМПАНИИ</div>
@@ -228,7 +349,7 @@
                     <!-- 2-Column Industrial Narrative -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
                         <!-- Left Column: Narrative Content -->
-                        <div class="lg:col-span-6 space-y-6">
+                        <div class="lg:col-span-6 space-y-6 reveal-up">
                             <p class="font-body-lg text-body-lg text-on-surface leading-relaxed font-normal">
                                 Предприятие NURHAYO TEXTILE объединяет полный производственный цикл: от селекции
                                 отборного средневолокнистого и длинноволокнистого хлопка до конструирования,
@@ -251,7 +372,7 @@
                                             лаборатория тестирования полотна</h4>
                                         <p class="font-body-sm text-body-sm text-on-surface-variant">Проверка каждого
                                             рулона на пиллингуемость, усадку после стирки и стойкость крашения по
-                                            стандартам AATCC / ISO.</p>
+                                             стандартам AATCC / ISO.</p>
                                     </div>
                                 </div>
                                 <div
@@ -281,7 +402,7 @@
                             </div>
                         </div>
                         <!-- Right Column: Visual Industrial Card -->
-                        <div class="lg:col-span-6 relative">
+                        <div class="lg:col-span-6 relative reveal-up delay-150">
                             <div
                                 class="rounded-xl overflow-hidden border border-outline-variant/60 shadow-md bg-surface-container-lowest p-2">
                                 <div class="relative h-80 sm:h-96 w-full rounded-lg overflow-hidden">
@@ -334,7 +455,7 @@
             <section class="w-full py-20 bg-surface-container-low border-y border-outline-variant/40" id="advantages">
                 <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
                     <!-- Section Header -->
-                    <div class="max-w-2xl mb-14">
+                    <div class="max-w-2xl mb-14 reveal-up">
                         <div
                             class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold mb-2">
                             ПРЕИМУЩЕСТВА</div>
@@ -345,7 +466,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Card 1 -->
                         <div
-                            class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm hover:border-secondary transition-all duration-300 flex flex-col justify-between group">
+                            class="reveal-up bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm hover:border-secondary transition-all duration-300 flex flex-col justify-between group">
                             <div class="space-y-4">
                                 <div
                                     class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-surface-container-lowest transition-colors">
@@ -368,7 +489,7 @@
                         </div>
                         <!-- Card 2 -->
                         <div
-                            class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm hover:border-secondary transition-all duration-300 flex flex-col justify-between group">
+                            class="reveal-up delay-100 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm hover:border-secondary transition-all duration-300 flex flex-col justify-between group">
                             <div class="space-y-4">
                                 <div
                                     class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-surface-container-lowest transition-colors">
@@ -391,7 +512,7 @@
                         </div>
                         <!-- Card 3 -->
                         <div
-                            class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm hover:border-secondary transition-all duration-300 flex flex-col justify-between group">
+                            class="reveal-up delay-200 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm hover:border-secondary transition-all duration-300 flex flex-col justify-between group">
                             <div class="space-y-4">
                                 <div
                                     class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-surface-container-lowest transition-colors">
@@ -414,7 +535,7 @@
                         </div>
                         <!-- Card 4 -->
                         <div
-                            class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm hover:border-secondary transition-all duration-300 flex flex-col justify-between group">
+                            class="reveal-up delay-300 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm hover:border-secondary transition-all duration-300 flex flex-col justify-between group">
                             <div class="space-y-4">
                                 <div
                                     class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-surface-container-lowest transition-colors">
@@ -444,7 +565,7 @@
             <section class="w-full py-20 lg:py-28 bg-surface" id="products">
                 <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
                     <!-- Section Header -->
-                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 reveal-up">
                         <div>
                             <div
                                 class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold mb-2">
@@ -458,7 +579,7 @@
                         </p>
                     </div>
                     <!-- Category Filter Pills -->
-                    <div class="flex flex-wrap items-center gap-2 mb-12" id="catalog-filter-bar">
+                    <div class="flex flex-wrap items-center gap-2 mb-12 reveal-up delay-100" id="catalog-filter-bar">
                         <button
                             class="catalog-filter-btn px-4 py-2 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-primary-container text-surface-container-lowest font-medium transition-all"
                             data-category="all" type="button">Все категории</button>
@@ -484,7 +605,7 @@
                     <!-- 6 Product Cards Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <!-- Product 1: Мужская одежда -->
-                        <div class="product-item bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
+                        <div class="product-item reveal-up bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
                             data-cat="mens">
                             <div class="relative h-64 w-full bg-surface-container">
                                 <img class="w-full h-full object-cover"
@@ -528,7 +649,7 @@
                             </div>
                         </div>
                         <!-- Product 2: Женская одежда -->
-                        <div class="product-item bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
+                        <div class="product-item reveal-up delay-100 bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
                             data-cat="womens">
                             <div class="relative h-64 w-full bg-surface-container">
                                 <img class="w-full h-full object-cover"
@@ -572,7 +693,7 @@
                             </div>
                         </div>
                         <!-- Product 3: Детская одежда -->
-                        <div class="product-item bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
+                        <div class="product-item reveal-up delay-200 bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
                             data-cat="kids">
                             <div class="relative h-64 w-full bg-surface-container">
                                 <img class="w-full h-full object-cover"
@@ -616,7 +737,7 @@
                             </div>
                         </div>
                         <!-- Product 4: Спортивная одежда -->
-                        <div class="product-item bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
+                        <div class="product-item reveal-up bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
                             data-cat="sport">
                             <div class="relative h-64 w-full bg-surface-container">
                                 <img class="w-full h-full object-cover"
@@ -660,7 +781,7 @@
                             </div>
                         </div>
                         <!-- Product 5: Майки и футболки -->
-                        <div class="product-item bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
+                        <div class="product-item reveal-up delay-100 bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
                             data-cat="tshirts">
                             <div class="relative h-64 w-full bg-surface-container">
                                 <img class="w-full h-full object-cover"
@@ -695,7 +816,7 @@
                             </div>
                         </div>
                         <!-- Product 6: Другие текстильные изделия -->
-                        <div class="product-item bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
+                        <div class="product-item reveal-up delay-200 bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm hover:shadow-md hover:border-secondary transition-all flex flex-col"
                             data-cat="other">
                             <div class="relative h-64 w-full bg-surface-container">
                                 <img class="w-full h-full object-cover"
@@ -732,7 +853,7 @@
                     </div>
                     <!-- Bottom Bar: Wholesale Catalog Download -->
                     <div
-                        class="mt-14 p-6 sm:p-8 rounded-xl bg-surface-container-high border border-outline-variant/60 flex flex-col sm:flex-row items-center justify-between gap-6">
+                        class="mt-14 p-6 sm:p-8 rounded-xl bg-surface-container-high border border-outline-variant/60 flex flex-col sm:flex-row items-center justify-between gap-6 reveal-up">
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-12 h-12 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center shadow-sm shrink-0">
@@ -762,7 +883,7 @@
                 id="production">
                 <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
                     <!-- Section Header -->
-                    <div class="max-w-2xl mb-14">
+                    <div class="max-w-2xl mb-14 reveal-up">
                         <div
                             class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold mb-2">
                             ПРОИЗВОДСТВЕННЫЙ ЦИКЛ</div>
@@ -777,7 +898,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <!-- Stage 01 -->
                         <div
-                            class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm relative group hover:border-secondary transition-all">
+                            class="reveal-up bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm relative group hover:border-secondary transition-all">
                             <div class="font-headline-lg text-headline-lg font-bold text-outline-variant/60 mb-2">01
                             </div>
                             <div
@@ -793,7 +914,7 @@
                         </div>
                         <!-- Stage 02 -->
                         <div
-                            class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm relative group hover:border-secondary transition-all">
+                            class="reveal-up delay-100 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm relative group hover:border-secondary transition-all">
                             <div class="font-headline-lg text-headline-lg font-bold text-outline-variant/60 mb-2">02
                             </div>
                             <div
@@ -810,7 +931,7 @@
                         </div>
                         <!-- Stage 03 -->
                         <div
-                            class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm relative group hover:border-secondary transition-all">
+                            class="reveal-up delay-200 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm relative group hover:border-secondary transition-all">
                             <div class="font-headline-lg text-headline-lg font-bold text-outline-variant/60 mb-2">03
                             </div>
                             <div
@@ -826,7 +947,7 @@
                         </div>
                         <!-- Stage 04 -->
                         <div
-                            class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm relative group hover:border-secondary transition-all">
+                            class="reveal-up delay-300 bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/60 shadow-sm relative group hover:border-secondary transition-all">
                             <div class="font-headline-lg text-headline-lg font-bold text-outline-variant/60 mb-2">04
                             </div>
                             <div
@@ -843,7 +964,7 @@
                     </div>
                     <!-- Factory Technical Gallery Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-                        <div class="relative h-64 rounded-xl overflow-hidden border border-outline-variant/60">
+                        <div class="relative h-64 rounded-xl overflow-hidden border border-outline-variant/60 reveal-up">
                             <img class="w-full h-full object-cover"
                                 data-alt="High speed automated fabric dyeing vats with electronic color matching spectrophotometers in a sustainable textile processing lab."
                                 src="/images/photo_2026-11-19_17-20-49.jpg" />
@@ -859,7 +980,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="relative h-64 rounded-xl overflow-hidden border border-outline-variant/60">
+                        <div class="relative h-64 rounded-xl overflow-hidden border border-outline-variant/60 reveal-up delay-150">
                             <img class="w-full h-full object-cover"
                                 data-alt="Automated 12-head embroidery machine crafting precise corporate logos on black cotton polo shirts in an orderly clean manufacturing line."
                                 src="/images/photo_2026-11-21_17-42-35.jpg" />
@@ -889,7 +1010,7 @@
                 </div>
                 <div class="max-w-[1280px] mx-auto px-6 lg:px-12 relative z-10">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                        <div class="lg:col-span-7 space-y-6">
+                        <div class="lg:col-span-7 space-y-6 reveal-up">
                             <div
                                 class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-lowest/10 border border-surface-container-lowest/20">
                                 <span
@@ -953,7 +1074,7 @@
                             </div>
                         </div>
                         <div
-                            class="lg:col-span-5 flex flex-col items-center justify-center p-8 sm:p-10 rounded-2xl bg-surface-container-lowest/5 border border-surface-container-lowest/15 backdrop-blur-md text-center space-y-6">
+                            class="lg:col-span-5 flex flex-col items-center justify-center p-8 sm:p-10 rounded-2xl bg-surface-container-lowest/5 border border-surface-container-lowest/15 backdrop-blur-md text-center space-y-6 reveal-up delay-150">
                             <div
                                 class="w-16 h-16 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary-container">
                                 <span class="material-symbols-outlined text-[36px]">handshake</span>
@@ -982,7 +1103,7 @@
             <section class="w-full py-20 lg:py-28 bg-surface" id="contact">
                 <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
                     <!-- Section Header -->
-                    <div class="max-w-2xl mb-14">
+                    <div class="max-w-2xl mb-14 reveal-up">
                         <div
                             class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold mb-2">
                             КОНТАКТЫ</div>
@@ -999,7 +1120,7 @@
                         <div class="lg:col-span-5 space-y-6">
                             <!-- Telegram Highlight Box -->
                             <div
-                                class="p-6 rounded-xl bg-surface-container-low border border-outline-variant/60 space-y-4">
+                                class="reveal-up p-6 rounded-xl bg-surface-container-low border border-outline-variant/60 space-y-4">
                                 <div class="flex items-center gap-3">
                                     <div
                                         class="w-10 h-10 rounded-full bg-secondary text-surface-container-lowest flex items-center justify-center">
@@ -1019,7 +1140,7 @@
                                 </a>
                             </div>
                             <!-- Structured Contact Information -->
-                            <div class="space-y-4 pt-2">
+                            <div class="reveal-up delay-100 space-y-4 pt-2">
                                 <div class="flex items-start gap-4">
                                     <div
                                         class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary shrink-0">
@@ -1028,7 +1149,7 @@
                                     <div>
                                         <span
                                             class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Отдел
-                                            оптовых продаж &amp; ВЭД:</span>
+                                             оптовых продаж &amp; ВЭД:</span>
                                         <div
                                             class="font-headline-sm text-headline-sm font-semibold text-on-surface mt-0.5">
                                             <a class="hover:text-secondary transition-colors block"
@@ -1085,7 +1206,7 @@
                                 </div>
                             </div>
                             <!-- Static Location Visual Container -->
-                            <div class="w-full h-44 rounded-xl border border-outline-variant/60 shadow-sm relative overflow-hidden bg-cover bg-center"
+                            <div class="reveal-up delay-150 w-full h-44 rounded-xl border border-outline-variant/60 shadow-sm relative overflow-hidden bg-cover bg-center"
                                 data-location="Tashkent, Sergeli industrial zone, Uzbekistan"
                                 style="background-image: url('/images/yandex\ location\ .png')">
                                 <div
@@ -1100,13 +1221,12 @@
                         <!-- Right Column: Institutional Request for Quote Form -->
                         <div class="lg:col-span-7">
                             <div
-                                class="bg-surface-container-lowest p-8 sm:p-10 rounded-2xl border border-outline-variant/60 shadow-md">
+                                class="reveal-up delay-200 bg-surface-container-lowest p-8 sm:p-10 rounded-2xl border border-outline-variant/60 shadow-md">
                                 <h3 class="font-headline-md text-headline-md font-bold text-on-surface mb-2">Запрос на
                                     расчет стоимости</h3>
                                 <p class="font-body-sm text-body-sm text-on-surface-variant mb-6">Заполните спецификацию
                                     заказа, и мы вышлем предварительную калькуляцию с ценами и сроками поставки.</p>
-                                <form class="space-y-5" id="quote-form"
-                                    onsubmit="event.preventDefault(); document.getElementById('form-success-banner').classList.remove('hidden'); this.reset();">
+                                <form class="space-y-5" id="quote-form" novalidate>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                                         <div class="space-y-1.5">
                                             <label
@@ -1115,7 +1235,8 @@
                                             <input
                                                 class="w-full px-4 py-2.5 rounded-lg bg-surface border border-outline-variant text-on-surface font-body-md text-body-md focus:border-secondary focus:outline-none transition-colors"
                                                 id="client-name" placeholder="Иван Петров, ООО 'Ритейл Бренд'"
-                                                required="" type="text" />
+                                                type="text" />
+                                            <p class="hidden text-xs text-error font-medium" id="client-name-error"></p>
                                         </div>
                                         <div class="space-y-1.5">
                                             <label
@@ -1123,8 +1244,9 @@
                                                 for="client-email">Рабочий Email *</label>
                                             <input
                                                 class="w-full px-4 py-2.5 rounded-lg bg-surface border border-outline-variant text-on-surface font-body-md text-body-md focus:border-secondary focus:outline-none transition-colors"
-                                                id="client-email" placeholder="corp@company.ru" required=""
+                                                id="client-email" placeholder="corp@company.ru"
                                                 type="email" />
+                                            <p class="hidden text-xs text-error font-medium" id="client-email-error"></p>
                                         </div>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -1134,8 +1256,9 @@
                                                 for="client-phone">Телефон / Telegram *</label>
                                             <input
                                                 class="w-full px-4 py-2.5 rounded-lg bg-surface border border-outline-variant text-on-surface font-body-md text-body-md focus:border-secondary focus:outline-none transition-colors"
-                                                id="client-phone" placeholder="+7 999 000-00-00" required=""
+                                                id="client-phone" placeholder="+998 90 000-00-00 или @username"
                                                 type="tel" />
+                                            <p class="hidden text-xs text-error font-medium" id="client-phone-error"></p>
                                         </div>
                                         <div class="space-y-1.5">
                                             <label
@@ -1172,21 +1295,22 @@
                                             placeholder="Укажите требования к плотности ткани, составу, размерам, методу брендирования (шелкография / вышивка) и городу доставки..."
                                             rows="3"></textarea>
                                     </div>
-                                    <div class="flex items-start gap-2.5 pt-1">
+                                    <label class="flex items-start gap-3 pt-1 cursor-pointer select-none" for="privacy-consent">
                                         <input
-                                            class="mt-1 rounded border-outline-variant text-secondary focus:ring-secondary"
-                                            id="privacy-consent" required="" type="checkbox" />
-                                        <label class="font-body-sm text-body-sm text-on-surface-variant"
-                                            for="privacy-consent">
+                                            class="mt-0.5 w-5 h-5 min-w-[20px] min-h-[20px] rounded cursor-pointer accent-[#006398]"
+                                            id="privacy-consent" checked type="checkbox" />
+                                        <span class="font-body-sm text-body-sm text-on-surface-variant">
                                             Согласен на обработку персональных данных и подтверждаю ознакомление с
                                             политикой конфиденциальности.
-                                        </label>
-                                    </div>
+                                        </span>
+                                    </label>
+                                    <p class="hidden text-xs text-error font-medium" id="privacy-consent-error"></p>
                                     <button
-                                        class="w-full py-4 rounded-lg bg-primary-container text-surface-container-lowest font-label-md text-label-md uppercase tracking-wider font-semibold hover:bg-secondary transition-all shadow-md flex items-center justify-center gap-2"
+                                        id="quote-submit-btn"
+                                        class="w-full py-4 rounded-lg bg-primary-container text-surface-container-lowest font-label-md text-label-md uppercase tracking-wider font-semibold hover:bg-secondary transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                                         type="submit">
-                                        <span>Отправить запрос на расчет стоимости</span>
-                                        <span class="material-symbols-outlined text-[18px]">send</span>
+                                        <span id="quote-submit-text">Отправить запрос на расчет стоимости</span>
+                                        <span id="quote-submit-icon" class="material-symbols-outlined text-[18px]">send</span>
                                     </button>
                                     <div
                                         class="flex items-center justify-center gap-2 text-center pt-1 font-label-sm text-label-sm text-on-surface-variant">
@@ -1202,6 +1326,15 @@
                                             <span class="font-bold block">Запрос успешно отправлен!</span>
                                             Менеджер экспортного отдела свяжется с вами в течение 2 часов для
                                             согласования условий.
+                                        </div>
+                                    </div>
+                                    <!-- Error Notification Banner -->
+                                    <div class="hidden p-4 rounded-lg bg-error/10 border border-error/30 text-error flex items-center gap-3"
+                                        id="form-error-banner">
+                                        <span class="material-symbols-outlined text-[24px]">error</span>
+                                        <div class="font-body-sm text-body-sm">
+                                            <span class="font-bold block" id="form-error-title">Ошибка при отправке!</span>
+                                            <span id="form-error-desc">Не удалось отправить заявку. Пожалуйста, попробуйте еще раз или свяжитесь с нами напрямую.</span>
                                         </div>
                                     </div>
                                 </form>
@@ -1242,6 +1375,69 @@
                             });
                         });
                     });
+
+                    // Bi-directional Scroll Reveal Animation
+                    const revealElements = document.querySelectorAll('.reveal-up');
+                    if (revealElements.length && 'IntersectionObserver' in window) {
+                        const revealObserver = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                const rect = entry.boundingClientRect;
+
+                                if (entry.isIntersecting) {
+                                    // Triggered both when scrolling down (from bottom) and when scrolling up (from top)
+                                    entry.target.classList.add('is-visible');
+                                } else {
+                                    // Only reset when completely outside viewport boundaries (above or below)
+                                    // This allows re-triggering animation smoothly when scrolled back in either direction
+                                    if (rect.bottom <= 0 || rect.top >= window.innerHeight) {
+                                        entry.target.classList.remove('is-visible');
+                                    }
+                                }
+                            });
+                        }, {
+                            threshold: 0.08,
+                            rootMargin: '0px'
+                        });
+
+                        revealElements.forEach(el => revealObserver.observe(el));
+                    } else if (revealElements.length) {
+                        revealElements.forEach(el => el.classList.add('is-visible'));
+                    }
+
+                    // Mobile & Tablet Menu Drawer Logic
+                    const menuToggle = document.getElementById('mobile-menu-toggle');
+                    const menuClose = document.getElementById('mobile-menu-close');
+                    const menuBackdrop = document.getElementById('mobile-menu-backdrop');
+                    const menuDrawer = document.getElementById('mobile-menu-drawer');
+                    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+                    function openMobileMenu() {
+                        if (!menuBackdrop || !menuDrawer) return;
+                        menuBackdrop.classList.remove('pointer-events-none', 'opacity-0');
+                        menuBackdrop.classList.add('opacity-100');
+                        menuDrawer.classList.remove('translate-x-full');
+                        document.body.style.overflow = 'hidden';
+                    }
+
+                    function closeMobileMenu() {
+                        if (!menuBackdrop || !menuDrawer) return;
+                        menuBackdrop.classList.remove('opacity-100');
+                        menuBackdrop.classList.add('opacity-0', 'pointer-events-none');
+                        menuDrawer.classList.add('translate-x-full');
+                        document.body.style.overflow = '';
+                    }
+
+                    if (menuToggle) menuToggle.addEventListener('click', openMobileMenu);
+                    if (menuClose) menuClose.addEventListener('click', closeMobileMenu);
+                    if (menuBackdrop) menuBackdrop.addEventListener('click', closeMobileMenu);
+
+                    mobileNavLinks.forEach(link => {
+                        link.addEventListener('click', closeMobileMenu);
+                    });
+
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape') closeMobileMenu();
+                    });
                 });
             </script>
         </div>
@@ -1249,11 +1445,12 @@
     <footer class="w-full bg-primary-container text-inverse-on-surface border-t border-outline-variant/20 pt-16 pb-12">
         <div class="max-w-[1280px] mx-auto px-6 lg:px-12">
             <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-12 border-b border-outline-variant/15">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-12 border-b border-outline-variant/15 reveal-up">
                 <div class="lg:col-span-4 space-y-4">
                     <div class="flex items-center gap-3"><img alt="NURHAYO TEXTILE Logo"
-                            class="h-8 w-auto object-contain brightness-0 invert"
-                            src="/images/photo_2026-11-20_20-04-09.jpg" /><span
+                            class="w-10 h-10 rounded-full object-cover shrink-0 border border-surface-container-lowest/20 shadow-sm"
+                            style="border-radius: 50%;"
+                            src="images/photo_2026-11-20_20-04-09.jpg" /><span
                             class="font-headline-sm text-headline-sm uppercase tracking-wider text-surface-container-lowest font-bold">NURHAYO
                             TEXTILE</span></div>
                     <p class="font-body-sm text-body-sm text-on-primary-container max-w-sm">Крупный узбекский
@@ -1314,7 +1511,7 @@
                 </div>
             </div>
             <div
-                class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-body-sm text-body-sm text-on-primary-container">
+                class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-body-sm text-body-sm text-on-primary-container reveal-up">
                 <p>© 2025 NURHAYO TEXTILE. Все права защищены.</p>
                 <div class="flex items-center gap-6 font-label-sm text-label-sm"><a
                         class="hover:text-surface-container-lowest transition-colors" href="#">Политика
@@ -1324,6 +1521,7 @@
             </div>
         </div>
     </footer>
+    <script src="telegram.js"></script>
 </body>
 </html>
 
