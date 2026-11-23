@@ -85,42 +85,66 @@
 <body class="bg-surface font-body-md text-on-surface antialiased">
     <header
         class="sticky top-0 w-full z-50 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant/40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-        <div class="h-20 max-w-[1280px] mx-auto px-6 lg:px-12 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-4 shrink-0"><a class="flex items-center gap-3" data-path="home"
-                    href="#"><img alt="NURHAYO TEXTILE Logo"
-                        class="w-10 h-10 rounded-full object-cover shrink-0 border border-outline-variant/40 shadow-sm"
+        <div class="h-16 sm:h-20 max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3 sm:gap-4">
+            <!-- Brand & Logo -->
+            <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
+                <a class="flex items-center gap-2.5 sm:gap-3" data-path="home" href="#">
+                    <img alt="NURHAYO TEXTILE Logo"
+                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover shrink-0 border border-outline-variant/40 shadow-sm"
                         style="border-radius: 50%;"
-                        src="images/photo_2026-11-20_20-04-09.jpg" /><span
-                        class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface font-bold hidden sm:inline-block">NURHAYO
-                        TEXTILE</span></a></div>
-            <nav class="hidden xl:flex items-center gap-6" data-active-classes="text-secondary font-semibold"><a
-                    class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
-                    data-path="about" href="#about">О компании</a><a
-                    class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
-                    data-path="advantages" href="#advantages">Преимущества</a><a
-                    class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
-                    data-path="products" href="#products">Продукция</a><a
-                    class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
-                    data-path="production" href="#production">Производство</a><a
-                    class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
-                    data-path="cooperation" href="#cooperation">Сотрудничество</a><a
-                    class="font-label-md text-label-md text-on-surface-variant hover:text-secondary uppercase transition-colors"
-                    data-path="contact" href="#contact">Контакты</a></nav>
-            <div class="flex items-center gap-3 sm:gap-4 shrink-0"><a
-                    class="hidden md:flex items-center gap-2 font-label-md text-label-md text-on-surface hover:text-secondary transition-colors"
-                    href="tel:+998906212221"><span
-                        class="material-symbols-outlined text-[18px] text-secondary">call</span><span>+998 90
-                        621-22-21</span></a><a aria-label="Telegram"
-                    class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-secondary"
-                    href="https://t.me/ooo_NURHAYO_textile" rel="noopener noreferrer" target="_blank"><span
-                        class="material-symbols-outlined text-[18px]">send</span></a>
-                <a
-                    class="hidden sm:inline-flex items-center justify-center bg-primary-container text-on-primary font-label-md text-label-md uppercase px-4 py-2 rounded-lg hover:bg-secondary transition-all shadow-[0_4px_14px_rgba(0,99,152,0.15)]"
-                    href="#contact">Связаться с нами</a>
-                <!-- Mobile / Tablet Hamburger Toggle Button -->
+                        src="images/photo_2026-11-20_20-04-09.jpg" />
+                    <span class="font-headline-sm text-sm sm:text-base xl:text-lg uppercase tracking-wider text-on-surface font-bold whitespace-nowrap">
+                        NURHAYO <span class="hidden sm:inline">TEXTILE</span>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Desktop Navigation Menu (hidden on mobile & tablet, visible on xl) -->
+            <nav class="hidden xl:flex items-center gap-4 2xl:gap-6 shrink" data-active-classes="text-secondary font-semibold">
+                <a class="text-[12px] 2xl:text-[13px] font-semibold text-on-surface-variant hover:text-secondary uppercase tracking-wider whitespace-nowrap transition-colors py-1"
+                    data-path="about" href="#about">О компании</a>
+                <a class="text-[12px] 2xl:text-[13px] font-semibold text-on-surface-variant hover:text-secondary uppercase tracking-wider whitespace-nowrap transition-colors py-1"
+                    data-path="advantages" href="#advantages">Преимущества</a>
+                <a class="text-[12px] 2xl:text-[13px] font-semibold text-on-surface-variant hover:text-secondary uppercase tracking-wider whitespace-nowrap transition-colors py-1"
+                    data-path="products" href="#products">Продукция</a>
+                <a class="text-[12px] 2xl:text-[13px] font-semibold text-on-surface-variant hover:text-secondary uppercase tracking-wider whitespace-nowrap transition-colors py-1"
+                    data-path="production" href="#production">Производство</a>
+                <a class="text-[12px] 2xl:text-[13px] font-semibold text-on-surface-variant hover:text-secondary uppercase tracking-wider whitespace-nowrap transition-colors py-1"
+                    data-path="cooperation" href="#cooperation">Сотрудничество</a>
+                <a class="text-[12px] 2xl:text-[13px] font-semibold text-on-surface-variant hover:text-secondary uppercase tracking-wider whitespace-nowrap transition-colors py-1"
+                    data-path="contact" href="#contact">Контакты</a>
+            </nav>
+
+            <!-- Actions / Buttons -->
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <!-- Phone (icon only on md/lg, full text on 2xl) -->
+                <a class="hidden 2xl:flex items-center gap-1.5 font-label-md text-label-md text-on-surface hover:text-secondary whitespace-nowrap transition-colors mr-1"
+                    href="tel:+998906212221">
+                    <span class="material-symbols-outlined text-[18px] text-secondary">call</span>
+                    <span>+998 90 621-22-21</span>
+                </a>
+                <a class="hidden sm:flex 2xl:hidden items-center justify-center w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-secondary"
+                    href="tel:+998906212221" title="+998 90 621-22-21">
+                    <span class="material-symbols-outlined text-[18px]">call</span>
+                </a>
+
+                <!-- Telegram Button -->
+                <a aria-label="Telegram"
+                    class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-secondary shrink-0"
+                    href="https://t.me/ooo_NURHAYO_textile" rel="noopener noreferrer" target="_blank">
+                    <span class="material-symbols-outlined text-[18px]">send</span>
+                </a>
+
+                <!-- CTA Button (desktop only: visible on xl and above) -->
+                <a class="hidden xl:inline-flex items-center justify-center bg-primary-container text-on-primary font-label-md text-[12px] uppercase px-3.5 2xl:px-4 py-2 rounded-lg hover:bg-secondary transition-all shadow-[0_4px_14px_rgba(0,99,152,0.15)] whitespace-nowrap shrink-0 font-semibold"
+                    href="#contact">
+                    <span>Связаться с нами</span>
+                </a>
+
+                <!-- Mobile / Tablet Hamburger Toggle Button (visible below xl) -->
                 <button id="mobile-menu-toggle" aria-label="Открыть меню"
-                    class="xl:hidden flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container hover:bg-surface-container-high active:scale-95 transition-all text-on-surface focus:outline-none">
-                    <span id="mobile-menu-icon" class="material-symbols-outlined text-[24px]">menu</span>
+                    class="xl:hidden flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-surface-container hover:bg-surface-container-high active:scale-95 transition-all text-on-surface focus:outline-none shrink-0">
+                    <span id="mobile-menu-icon" class="material-symbols-outlined text-[22px] sm:text-[24px]">menu</span>
                 </button>
             </div>
         </div>
