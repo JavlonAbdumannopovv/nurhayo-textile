@@ -73,7 +73,7 @@ Formani to'ldirib yuborganda Telegramga quyidagicha xabar boradi:
 Плотность 180 г/м2, 100% хлопок, брендирование шелкографией.
 ━━━━━━━━━━━━━━━━━━━━
 ⏰ Время заявки: 23.11.2026, 11:45:00
-🌐 Источник: nurhayotextile.uz
+🌐 Источник: https://nurhayo-textile.vercel.app/
 ```
 
 ---

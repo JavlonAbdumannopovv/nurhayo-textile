@@ -277,7 +277,7 @@ function initTelegramIntegration() {
             `${escapeHtml(orderSpecs)}`,
             "━━━━━━━━━━━━━━━━━━━━",
             `⏰ <b>Время заявки:</b> ${getFormattedDate()}`,
-            `🌐 <b>Источник:</b> nurhayotextile.uz`
+            `🌐 <b>Источник:</b> https://nurhayo-textile.vercel.app/`
         ].join("\n");
 
         setLoading(true);
